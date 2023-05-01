@@ -17,24 +17,48 @@ SPEED = 5
 BLOCK_SIZE = 20
 MAX_LEVEL = 2
 SCORE = 0
-LEVEL = 1
+LEVEL = 0
 
-def insert_nickname(nickname):
-    sql = "INSERT INTO Snake(NickName, Level, Score) VALUES(%s, %s, %s)"
+def get_player(nickname):
+    sql = "SELECT * FROM Snake WHERE NickName = %s"
     conn = None
     try:
         params = config()
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
-        cur.executemany(sql, nickname)
-        conn.commit()
-        cur.close()
+        cur.execute(sql, (nickname,))
+        row = cur.fetchone()
+        if row:
+            return row[1], row[2]  # Return level and score
+        else:
+            return None, None
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
         if conn is not None:
             conn.close()
             
+def insert_player(players):
+    conn = None
+    try:
+        params = config()
+        conn = psycopg2.connect(**params)
+        cur = conn.cursor()
+        for player in players:
+            nickname, level, score = player
+            cur.execute("SELECT * FROM Snake WHERE NickName = %s", (nickname,))
+            row = cur.fetchone()
+            if row:
+                cur.execute("UPDATE Snake SET Level = %s, Score = %s WHERE NickName = %s", (level, score, nickname))
+            else:
+                cur.execute("INSERT INTO Snake(NickName, Level, Score) VALUES(%s, %s, %s)", (nickname, level, score))
+        conn.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+
 if __name__ == '__main__':
     print("1)New Player 2)I have an account: ")
     print("")
@@ -44,7 +68,13 @@ if __name__ == '__main__':
         print("")
         print("Completed!")
     elif option == 2:
-        print("Working with it")
+        while True:
+            Nickname = str(input("Enter your nickname: "))
+            LEVEL, SCORE = get_player(Nickname)
+            if LEVEL is None:
+                print("User doesn't exist")
+            else:
+                break
     else:
         print("Invalid option is selected")
         sys.exit()
@@ -113,7 +143,7 @@ class Snake:
 
     def game_over(self):
         global LEVEL
-        insert_nickname([(Nickname, LEVEL, SCORE)])
+        insert_player([(Nickname, LEVEL + 1, SCORE)])
         font = pygame.font.SysFont("Verdana", 30)
         text = font.render("GAME OVER", True, (255, 255, 255))
         text_rect = text.get_rect(center=(WIDTH/2, HEIGHT/2))
@@ -182,7 +212,7 @@ def main():
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                insert_nickname([(Nickname, LEVEL, SCORE)])
+                insert_player([(Nickname, LEVEL + 1, SCORE)])
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
@@ -202,11 +232,11 @@ def main():
         if len(snake.body) > 4 and len(snake.body) % 2 == 1:
             newLevel = snake.level + 1
             LEVEL += 1
-            SPEED += 1 #Speed increases every level passed
+            SPEED += 1 
             snake = Snake()
             snake.level = newLevel
             wall = Wall(snake.level)
-            food = Food(wall) # pass new wall to Food object when the level changes
+            food = Food(wall)
 
         
         snake.move(wall)
@@ -220,14 +250,14 @@ def main():
         
         drawGrid()
         
-        score_surface = font_small.render("SCORE: " + str(SCORE), True, (255, 255, 255)) #scoreboard of the foods eaten
-        SCREEN.blit(score_surface, (315, 5))
+        score_surface = font_small.render("SCORE: " + str(SCORE), True, (255, 255, 255)) 
+        SCREEN.blit(score_surface, (305, 5))
 
-        level_surface = font_small.render("Level: " + str(snake.level + 1), True, (255, 255, 255)) #scoreboard of the level
+        level_surface = font_small.render("Level: " + str(LEVEL + 1), True, (255, 255, 255)) 
         SCREEN.blit(level_surface, (10, 5))
         
         pygame.display.update()
-        CLOCK.tick(SPEED) #Speed becomes faster
+        CLOCK.tick(SPEED + LEVEL) 
 
 
 def drawGrid():
