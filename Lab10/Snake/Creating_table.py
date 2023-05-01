@@ -7,6 +7,7 @@ def create_tables():
         """
         CREATE TABLE Snake(
             NickName VARCHAR(255) NOT NULL,
+            Level INTEGER DEFAULT 0,
             Score INTEGER DEFAULT 0,
             CONSTRAINT nickname UNIQUE (NickName)
         )

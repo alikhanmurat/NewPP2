@@ -15,7 +15,63 @@ SPEED = 5
 BLOCK_SIZE = 20
 MAX_LEVEL = 2
 SCORE = 0
-count = 0
+LEVEL = 1
+
+def insert_nickname(nickname):
+    sql = "INSERT INTO Snake(NickName, Score) VALUES(%s, %s)"
+    conn = None
+    try:
+        params = config()
+        conn = psycopg2.connect(**params)
+        cur = conn.cursor()
+        cur.executemany(sql, nickname)
+        conn.commit()
+        cur.close()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+def get_user_info(nickname):
+    sql = "SELECT Level, Score FROM Snake WHERE NickName = %s"
+    conn = None
+    try:
+        params = config()
+        conn = psycopg2.connect(**params)
+        cur = conn.cursor()
+        cur.execute(sql, (nickname))
+        user_info = cur.fetchone()
+        cur.close()
+        return user_info
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        if conn is not None:
+            conn.close()
+            
+if __name__ == '__main__':
+    print("1)New Player 2)I have an account: ")
+    print("")
+    option = int(input())
+    if option == 1:
+        Nickname = str(input("Enter a nickname: "))
+        print("")
+        insert_nickname([(Nickname, SCORE)])
+        print("Completed!")
+        user_info = (0, 0)
+    elif option == 2:
+        Nickname = str(input("Enter a nickname: "))
+        print("Completed!")
+        user_info = get_user_info(Nickname)
+        if not user_info:
+            print("User not found")
+            sys.exit(1)
+    else:
+        print("Invalid option is selected")
+        sys.exit(1)
+
+    level, SCORE = user_info
+
 class Point:
     def __init__(self, _x, _y):
         self.x = _x
@@ -54,7 +110,7 @@ class Food:
             if not any(point.x == self.body.x and point.y == self.body.y for point in self.wall.body):
                 break 
         self.lock.release()
-        self.timer = threading.Timer(5.0, self.update_locationfirst)
+        self.timer = threading.Timer(random.randrange(5, 10), self.update_locationfirst)
         self.timer.start()
 
     def update_locationsecond(self):
@@ -132,21 +188,22 @@ class Snake:
         self.body.pop()
 
 def main():
-    global SCREEN, CLOCK
+    global SCREEN, CLOCK, SPEED, LEVEL
     pygame.init()
     SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
     CLOCK = pygame.time.Clock()
     SCREEN.fill(BLACK)
     font_small = pygame.font.SysFont("Verdana", 15)
+
     snake = Snake()
     wall = Wall(snake.level)
     food = Food(wall) 
 
     while True:
         for event in pygame.event.get():
-            global SPEED
             if event.type == pygame.QUIT:
                 pygame.quit()
+                sys.exit()
             if event.type == pygame.KEYDOWN:
                 if event.key == pygame.K_RIGHT:
                     snake.dx = 1
@@ -163,6 +220,7 @@ def main():
 
         if len(snake.body) > 4 and len(snake.body) % 2 == 1:
             newLevel = snake.level + 1
+            LEVEL += 1
             SPEED += 1 #Speed increases every level passed
             snake = Snake()
             snake.level = newLevel
@@ -170,15 +228,15 @@ def main():
             food = Food(wall) # pass new wall to Food object when the level changes
 
         
+        snake.move(wall)
         food.lock.acquire()
         snake.check_collision(food)
         food.lock.release()
-        snake.move(wall)
         SCREEN.fill(BLACK)
-        snake.draw()
-        food.draw()
         wall.draw()
-
+        food.draw()
+        snake.draw()
+        
         drawGrid()
         
         score_surface = font_small.render("SCORE: " + str(SCORE), True, (255, 255, 255)) #scoreboard of the foods eaten
