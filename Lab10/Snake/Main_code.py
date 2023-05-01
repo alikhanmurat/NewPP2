@@ -9,6 +9,7 @@ from pygame.locals import *
 import time
 import threading
 
+
 BLACK = (0, 0, 0)
 LINE_COLOR = (50, 50, 50)
 HEIGHT = 400
@@ -19,6 +20,7 @@ MAX_LEVEL = 2
 SCORE = 0
 LEVEL = 0
 
+
 def get_player(nickname):
     sql = "SELECT * FROM Snake WHERE NickName = %s"
     conn = None
@@ -28,10 +30,12 @@ def get_player(nickname):
         cur = conn.cursor()
         cur.execute(sql, (nickname,))
         row = cur.fetchone()
+        
         if row:
             return row[1], row[2]  # Return level and score
         else:
             return None, None
+        
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
@@ -44,15 +48,18 @@ def insert_player(players):
         params = config()
         conn = psycopg2.connect(**params)
         cur = conn.cursor()
+        
         for player in players:
             nickname, level, score = player
             cur.execute("SELECT * FROM Snake WHERE NickName = %s", (nickname,))
             row = cur.fetchone()
+            
             if row:
                 cur.execute("UPDATE Snake SET Level = %s, Score = %s WHERE NickName = %s", (level, score, nickname))
             else:
                 cur.execute("INSERT INTO Snake(NickName, Level, Score) VALUES(%s, %s, %s)", (nickname, level, score))
         conn.commit()
+        
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
@@ -63,14 +70,17 @@ if __name__ == '__main__':
     print("1)New Player 2)I have an account: ")
     print("")
     option = int(input())
+    
     if option == 1:
         Nickname = str(input("Enter a nickname: "))
         print("")
         print("Completed!")
+        
     elif option == 2:
         while True:
             Nickname = str(input("Enter your nickname: "))
             LEVEL, SCORE = get_player(Nickname)
+            
             if LEVEL is None:
                 print("User doesn't exist")
             else:
@@ -113,10 +123,12 @@ class Food:
 
     def update_locationfirst(self):
         self.lock.acquire()
+        
         while True:
             self.body = Point(random.randint(0, WIDTH//BLOCK_SIZE-1), random.randint(0, HEIGHT//BLOCK_SIZE-1))
             if not any(point.x == self.body.x and point.y == self.body.y for point in self.wall.body):
-                break 
+                break
+            
         self.lock.release()
         self.timer = threading.Timer(random.randrange(5, 10), self.update_locationfirst)
         self.timer.start()
@@ -144,6 +156,7 @@ class Snake:
     def game_over(self):
         global LEVEL
         insert_player([(Nickname, LEVEL + 1, SCORE)])
+        
         font = pygame.font.SysFont("Verdana", 30)
         text = font.render("GAME OVER", True, (255, 255, 255))
         text_rect = text.get_rect(center=(WIDTH/2, HEIGHT/2))
@@ -199,7 +212,9 @@ class Snake:
 
 def main():
     global SCREEN, CLOCK, SPEED, LEVEL
+    
     pygame.init()
+    
     SCREEN = pygame.display.set_mode((WIDTH, HEIGHT))
     CLOCK = pygame.time.Clock()
     SCREEN.fill(BLACK)
