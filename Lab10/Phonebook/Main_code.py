@@ -114,9 +114,8 @@ if __name__ == '__main__':
     elif option == 3:
         oldname = str(input("The name of the person you want to change: "))
         surname = str(input("The surname of the person you want to change: "))
-        phone = str(input("The phone of the person you want to change: "))
         newname = str(input("Enter the new name: "))
-        update_name(oldname, surname, newname, phone)
+        update_name(oldname, surname, newname)
         print("Completed!")
 
     elif option == 4:

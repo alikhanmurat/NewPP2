@@ -17,60 +17,6 @@ MAX_LEVEL = 2
 SCORE = 0
 LEVEL = 1
 
-def insert_nickname(nickname):
-    sql = "INSERT INTO Snake(NickName, Score) VALUES(%s, %s)"
-    conn = None
-    try:
-        params = config()
-        conn = psycopg2.connect(**params)
-        cur = conn.cursor()
-        cur.executemany(sql, nickname)
-        conn.commit()
-        cur.close()
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-def get_user_info(nickname):
-    sql = "SELECT Level, Score FROM Snake WHERE NickName = %s"
-    conn = None
-    try:
-        params = config()
-        conn = psycopg2.connect(**params)
-        cur = conn.cursor()
-        cur.execute(sql, (nickname))
-        user_info = cur.fetchone()
-        cur.close()
-        return user_info
-    except (Exception, psycopg2.DatabaseError) as error:
-        print(error)
-    finally:
-        if conn is not None:
-            conn.close()
-            
-if __name__ == '__main__':
-    print("1)New Player 2)I have an account: ")
-    print("")
-    option = int(input())
-    if option == 1:
-        Nickname = str(input("Enter a nickname: "))
-        print("")
-        insert_nickname([(Nickname, SCORE)])
-        print("Completed!")
-        user_info = (0, 0)
-    elif option == 2:
-        Nickname = str(input("Enter a nickname: "))
-        print("Completed!")
-        user_info = get_user_info(Nickname)
-        if not user_info:
-            print("User not found")
-            sys.exit(1)
-    else:
-        print("Invalid option is selected")
-        sys.exit(1)
-
-    level, SCORE = user_info
 
 class Point:
     def __init__(self, _x, _y):

@@ -18,7 +18,7 @@ SPEED = 5
 BLOCK_SIZE = 20
 MAX_LEVEL = 2
 SCORE = 0
-LEVEL = 0
+LEVEL = 1
 
 
 def get_player(nickname):
@@ -155,7 +155,7 @@ class Snake:
 
     def game_over(self):
         global LEVEL
-        insert_player([(Nickname, LEVEL + 1, SCORE)])
+        insert_player([(Nickname, LEVEL, SCORE)])
         
         font = pygame.font.SysFont("Verdana", 30)
         text = font.render("GAME OVER", True, (255, 255, 255))
@@ -206,6 +206,7 @@ class Snake:
             SCORE += food_score
             food.move()
             self.body.insert(0, Point(self.body[0].x + self.dx, self.body[0].y + self.dy))
+            
 
     def shorten(self):
         self.body.pop()
@@ -227,7 +228,7 @@ def main():
     while True:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
-                insert_player([(Nickname, LEVEL + 1, SCORE)])
+                insert_player([(Nickname, LEVEL, SCORE)])
                 pygame.quit()
                 sys.exit()
             if event.type == pygame.KEYDOWN:
@@ -268,11 +269,11 @@ def main():
         score_surface = font_small.render("SCORE: " + str(SCORE), True, (255, 255, 255)) 
         SCREEN.blit(score_surface, (305, 5))
 
-        level_surface = font_small.render("Level: " + str(LEVEL + 1), True, (255, 255, 255)) 
+        level_surface = font_small.render("Level: " + str(LEVEL), True, (255, 255, 255)) 
         SCREEN.blit(level_surface, (10, 5))
         
         pygame.display.update()
-        CLOCK.tick(SPEED + LEVEL) 
+        CLOCK.tick(SPEED + LEVEL - 1) 
 
 
 def drawGrid():

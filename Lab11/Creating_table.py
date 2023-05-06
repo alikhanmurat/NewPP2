@@ -10,7 +10,7 @@ def create_tables():
             Name VARCHAR(255) NOT NULL,
             Surname VARCHAR(255) NOT NULL,
             Phone Varchar(255) NOT NULL,
-            CONSTRAINT unique_name_surname_phone UNIQUE (Name, Surname, Phone)
+            CONSTRAINT unique_name_surname UNIQUE (Name, Surname)
         )
         """,
         )
