@@ -1,0 +1,179 @@
+Python data types
+-Text Type:	str
+-Numeric Types:	int, float, complex
+-Sequence Types:list, tuple, range
+-Mapping Type:	dict
+-Set Types:	set, frozenset
+-Boolean Type:	bool
+-Binary Types:	bytes, bytearray, memoryview
+-None Type:	NoneType
+
+-List
+list1 = ["apple", "banana", "cherry"]
+list2 = [1, 5, 7, 9, 3]
+list3 = [True, False, False]
+-Add items
+thislist.append(), thislist.insert(), thislist.extend(mylist, mytuple, myset)
+-Remove items : Remove list 
+thislist.remove(), thislist.pop(), del thislist[] : del thislist, thislist.clear()
+-Sort list
+thislist.sort()
+
+-Tuple 
+tuple1 = ("apple", "banana", "cherry")
+tuple2 = (1, 5, 7, 9, 3)
+tuple3 = (True, False, False)
+tuple4 = ("apple",)
+
+-Set
+set1 = {"apple", "banana", "cherry"}
+set2 = {1, 5, 7, 9, 3}
+set3 = {True, False, False}
+-Add items
+thisset.add(), thisset.update(), thisset.update(mylist, mytuple, myset)
+
+-Lambda
+A lambda function is a small anonymous function.
+A lambda function can take any number of arguments, but can only have one expression.
+
+-Inheritance
+Inheritance allows us to define a class that inherits all the methods and properties from another class.
+Parent class is the class being inherited from, also called base class.
+Child class is the class that inherits from another class, also called derived class.
+
+-Iterators
+An iterator is an object that contains a countable number of values.
+An iterator is an object that can be iterated upon, meaning that you can traverse through all the values.
+Technically, in Python, an iterator is an object which implements the iterator protocol, which consist of the methods __iter__() and __next__().
+The __iter__() method acts similar, you can do operations (initializing etc.), but must always return the iterator object itself.
+The __next__() method also allows you to do operations, and must return the next item in the sequence.
+
+-Dates
+import datetime
+
+x = datetime.datetime(2018, 6, 1)
+
+print(x.strftime("%B"))
+
+%a	Weekday, short version:	Wed	
+%A	Weekday, full version:	Wednesday	
+%w	Weekday as a number 0-6, 0 is Sunday:	3	
+%d	Day of month 01-31:	31	
+%b	Month name, short version:	Dec	
+%B	Month name, full version:	December	
+%m	Month as a number 01-12	12:	
+%y	Year, short version, without century:	18	
+%Y	Year, full version:	2018	
+%H	Hour 00-23:	17	
+%I	Hour 00-12:	05	
+%p	AM/PM	PM:	
+%M	Minute 00-59:	41	
+%S	Second 00-59:	08	
+%f	Microsecond 000000-999999:	548513	
+%z	UTC offset:	+0100	
+%Z	Timezone:	CST	
+%j	Day number of year 001-366:	365	
+%U	Week number of year, Sunday as the first day of week, 00-53:	52	
+%W	Week number of year, Monday as the first day of week, 00-53:	52	
+%c	Local version of date and time	Mon Dec 31 17:41:00 2018:	
+%C	Century:	20	
+%x	Local version of date:	12/31/18	
+%X	Local version of time:	17:41:00	
+%%	A % character:	%	
+%G	ISO 8601 year:	2018	
+%u	ISO 8601 weekday (1-7):	1	
+%V	ISO 8601 weeknumber (01-53):	01
+
+-JSON
+-Convert
+Python	JSON
+dict	Object
+list	Array
+tuple	Array
+str	String
+int	Number
+float	Number
+True	true
+False	false
+None	null
+
+-RegEx
+-Functions
+findall	Returns a list containing all matches
+search	Returns a Match object if there is a match anywhere in the string
+split	Returns a list where the string has been split at each match
+sub	Replaces one or many matches with a string
+
+-Metacharacters
+Metacharacters are characters with a special meaning:
+Character	Description	Example	
+[]	A set of characters	"[a-m]"	
+\	Signals a special sequence (can also be used to escape special characters)	"\d"	
+.	Any character (except newline character)	"he..o"	
+^	Starts with	"^hello"	
+$	Ends with	"planet$"	
+*	Zero or more occurrences	"he.*o"	
++	One or more occurrences	"he.+o"	
+?	Zero or one occurrences	"he.?o"	
+{}	Exactly the specified number of occurrences	"he.{2}o"	
+|	Either or	"falls|stays"	
+()	Capture and group
+
+-Special Sequences
+Character	Description	Example	
+\A	Returns a match if the specified characters are at the beginning of the string	"\AThe"	
+\b	Returns a match where the specified characters are at the beginning or at the end of a word
+(the "r" in the beginning is making sure that the string is being treated as a "raw string")	r"\bain"
+r"ain\b"	
+\B	Returns a match where the specified characters are present, but NOT at the beginning (or at the end) of a word
+(the "r" in the beginning is making sure that the string is being treated as a "raw string")	r"\Bain"
+r"ain\B"	
+\d	Returns a match where the string contains digits (numbers from 0-9)	"\d"	
+\D	Returns a match where the string DOES NOT contain digits	"\D"	
+\s	Returns a match where the string contains a white space character	"\s"	
+\S	Returns a match where the string DOES NOT contain a white space character	"\S"	
+\w	Returns a match where the string contains any word characters (characters from a to Z, digits from 0-9, and the underscore _ character)	"\w"	
+\W	Returns a match where the string DOES NOT contain any word characters	"\W"	
+\Z	Returns a match if the specified characters are at the end of the string	"Spain\Z"
+
+-Sets
+Set	Description	
+[arn]	Returns a match where one of the specified characters (a, r, or n) is present	
+[a-n]	Returns a match for any lower case character, alphabetically between a and n	
+[^arn]	Returns a match for any character EXCEPT a, r, and n	
+[0123]	Returns a match where any of the specified digits (0, 1, 2, or 3) are present	
+[0-9]	Returns a match for any digit between 0 and 9	
+[0-5][0-9]	Returns a match for any two-digit numbers from 00 and 59	
+[a-zA-Z]	Returns a match for any character alphabetically between a and z, lower case OR upper case	
+[+]	In sets, +, *, ., |, (), $,{} has no special meaning, so [+] means: return a match for any + character in the string
+
+-File Handling
+"r" - Read - Default value. Opens a file for reading, error if the file does not exist
+"a" - Append - Opens a file for appending, creates the file if it does not exist
+"w" - Write - Opens a file for writing, creates the file if it does not exist
+"x" - Create - Creates the specified file, returns an error if the file exists
+"t" - Text - Default value. Text mode
+"b" - Binary - Binary mode (e.g. images)
+
+The open() function returns a file object, which has a read() method for reading the content of the file:
+f = open("demofile.txt", "r")
+print(f.read())
+You can return one line by using the readline() method:
+
+
+-Order of methods for Centralized Scene Logic:
+Process, Update, Render
+
+
+
+
+
+
+
+
+
+
+
+
+
+
