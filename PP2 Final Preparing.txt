@@ -164,16 +164,43 @@ You can return one line by using the readline() method:
 -Order of methods for Centralized Scene Logic:
 Process, Update, Render
 
+Set Display 
+pygame.display.set_mode((WIDTH, HEIGHT))
+
+Draw Rectangle
+pygame.draw.rect(screen, color, pygame.Rect(30, 30, 60, 60), thickness)
+
+Draw Circle
+pygame.draw.ellipse(screen, color, radius, thickness)
+
+Load Image
+pygame.image.load()
+
+Transform Image
+pygame.transform.scale(image, (width, height))
+
+Get Image as a Rectangle 
+self.image.get_rect()
+
+Play Music 
+pygame.mixer.Sound().play()
+
+Create Sprite Group
+pygame.sprite.Group()
+
+Check Collision
+pygame.sprite.spritecollideany(object1, object2)
+
+Keyboard Keys
+pygame.key.get_pressed()
+event.type == pygame.KEYDOWN
+	event.key == pygame.K_{}
+
+Mouse Keys
+event.type == pygame.MOUSEBUTTONUP
+event.type == pygame.MOUSEBUTTONDOWN
+Track Mouse Cursor
+event.type == pygame.MOUSEMOTION
 
 
-
-
-
-
-
-
-
-
-
-
-
+PSQL Ez
